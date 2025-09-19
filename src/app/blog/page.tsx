@@ -1,3 +1,4 @@
+
 import { getPosts, getCategories, getTags } from '@/lib/posts';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -36,7 +37,7 @@ export default async function BlogPage({ searchParams }: { searchParams?: { cate
   );
   
   const createQueryString = (name: string, value: string) => {
-    const params = new URLSearchParams(searchParams as any);
+    const params = new URLSearchParams(searchParams?.toString());
     if (params.get(name) === value) {
       params.delete(name);
     } else {
@@ -47,7 +48,7 @@ export default async function BlogPage({ searchParams }: { searchParams?: { cate
   };
   
   const createPaginationString = (page: number) => {
-    const params = new URLSearchParams(searchParams as any);
+    const params = new URLSearchParams(searchParams?.toString());
     params.set('page', page.toString());
     return params.toString();
   }
