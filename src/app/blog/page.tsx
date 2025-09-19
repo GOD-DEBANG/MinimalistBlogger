@@ -35,7 +35,7 @@ export default function BlogPage({ searchParams }: { searchParams?: { category?:
   );
   
   const createQueryString = (name: string, value: string) => {
-    const params = new URLSearchParams(searchParams ? new URLSearchParams(searchParams as any).toString() : '');
+    const params = new URLSearchParams(searchParams?.toString());
     if (params.get(name) === value) {
       params.delete(name);
     } else {
