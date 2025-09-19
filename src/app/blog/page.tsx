@@ -9,14 +9,15 @@ import { format } from 'date-fns';
 
 const POSTS_PER_PAGE = 6;
 
-export default function BlogPage({ searchParams }: { searchParams?: { category?: string; tag?: string; page?: string; } }) {
-  const allPosts = getPosts();
+export default function BlogPage({ searchParams }: { searchParams?: { category?: string; tag?: string; page?: string; q?: string; } }) {
+  const allPosts = getPosts(searchParams?.q);
   const categories = getCategories();
   const tags = getTags();
 
   const currentPage = Number(searchParams?.page || 1);
   const currentCategory = searchParams?.category;
   const currentTag = searchParams?.tag;
+  const currentQuery = searchParams?.q;
 
   const filteredPosts = allPosts.filter(post => {
     if (currentCategory && post.category !== currentCategory) {
@@ -44,10 +45,19 @@ export default function BlogPage({ searchParams }: { searchParams?: { category?:
     params.set('page', '1');
     return params.toString();
   };
+  
+  const createPaginationString = (page: number) => {
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set('page', page.toString());
+    return params.toString();
+  }
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-8 font-headline">From the Blog</h1>
+      <header className="mb-8">
+        <h1 className="text-4xl font-bold font-headline">{currentQuery ? `Search Results for "${currentQuery}"`: 'From the Blog'}</h1>
+        {currentQuery && <p className="text-muted-foreground mt-2">{filteredPosts.length} post(s) found.</p>}
+      </header>
       
       <div className="flex flex-col md:flex-row gap-8">
         <aside className="w-full md:w-1/4 lg:w-1/5">
@@ -110,19 +120,19 @@ export default function BlogPage({ searchParams }: { searchParams?: { category?:
               <PaginationContent>
                 {currentPage > 1 &&
                   <PaginationItem>
-                    <PaginationPrevious href={`/blog?page=${currentPage - 1}${currentCategory ? `&category=${currentCategory}` : ''}${currentTag ? `&tag=${currentTag}` : ''}`} />
+                    <PaginationPrevious href={`/blog?${createPaginationString(currentPage - 1)}`} />
                   </PaginationItem>
                 }
                 {[...Array(totalPages)].map((_, i) => (
                   <PaginationItem key={i}>
-                    <PaginationLink href={`/blog?page=${i + 1}${currentCategory ? `&category=${currentCategory}` : ''}${currentTag ? `&tag=${currentTag}` : ''}`} isActive={currentPage === i + 1}>
+                    <PaginationLink href={`/blog?${createPaginationString(i + 1)}`} isActive={currentPage === i + 1}>
                       {i + 1}
                     </PaginationLink>
                   </PaginationItem>
                 ))}
                 { currentPage < totalPages &&
                   <PaginationItem>
-                    <PaginationNext href={`/blog?page=${currentPage + 1}${currentCategory ? `&category=${currentCategory}` : ''}${currentTag ? `&tag=${currentTag}` : ''}`} />
+                    <PaginationNext href={`/blog?${createPaginationString(currentPage + 1)}`} />
                   </PaginationItem>
                 }
               </PaginationContent>

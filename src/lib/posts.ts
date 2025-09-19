@@ -207,8 +207,19 @@ Step away from your computer to stretch, walk, or do something non-screen relate
   },
 ];
 
-export const getPosts = (): Post[] => {
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+export const getPosts = (query?: string): Post[] => {
+  let filteredPosts = posts;
+  if (query) {
+    const lowerCaseQuery = query.toLowerCase();
+    filteredPosts = posts.filter(post => 
+      post.title.toLowerCase().includes(lowerCaseQuery) ||
+      post.content.toLowerCase().includes(lowerCaseQuery) ||
+      post.excerpt.toLowerCase().includes(lowerCaseQuery) ||
+      post.category.toLowerCase().includes(lowerCaseQuery) ||
+      post.tags.some(tag => tag.toLowerCase().includes(lowerCaseQuery))
+    );
+  }
+  return filteredPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
 export const getFeaturedPosts = (): Post[] => {

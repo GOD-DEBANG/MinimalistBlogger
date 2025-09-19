@@ -7,9 +7,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { redirect } from 'next/navigation';
 
 export default function Home() {
   const featuredPosts = getFeaturedPosts();
+
+  async function search(formData: FormData) {
+    'use server';
+    const q = formData.get('q');
+    if (typeof q === 'string' && q) {
+      redirect(`/blog/search?q=${q}`);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-16 md:gap-24">
@@ -21,9 +30,9 @@ export default function Home() {
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             A clean space for thoughts, stories, and ideas. Explore articles on tech, design, and personal growth.
           </p>
-          <form className="max-w-md mx-auto relative animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <form action={search} className="max-w-md mx-auto relative animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input type="search" placeholder="Search posts..." className="pl-10 h-12 text-base" />
+            <Input name="q" type="search" placeholder="Search posts..." className="pl-10 h-12 text-base" />
             <Button type="submit" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10">
               <MoveRight className="h-5 w-5" />
             </Button>
