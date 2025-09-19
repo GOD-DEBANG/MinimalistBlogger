@@ -108,9 +108,11 @@ export default function BlogPage({ searchParams }: { searchParams?: { category?:
           {totalPages > 1 && (
             <Pagination className="mt-12">
               <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href={currentPage > 1 ? `/blog?page=${currentPage - 1}` : '#'} />
-                </PaginationItem>
+                {currentPage > 1 &&
+                  <PaginationItem>
+                    <PaginationPrevious href={`/blog?page=${currentPage - 1}`} />
+                  </PaginationItem>
+                }
                 {[...Array(totalPages)].map((_, i) => (
                   <PaginationItem key={i}>
                     <PaginationLink href={`/blog?page=${i + 1}`} isActive={currentPage === i + 1}>
@@ -118,9 +120,11 @@ export default function BlogPage({ searchParams }: { searchParams?: { category?:
                     </PaginationLink>
                   </PaginationItem>
                 ))}
-                <PaginationItem>
-                  <PaginationNext href={currentPage < totalPages ? `/blog?page=${currentPage + 1}` : '#'} />
-                </PaginationItem>
+                { currentPage < totalPages &&
+                  <PaginationItem>
+                    <PaginationNext href={`/blog?page=${currentPage + 1}`} />
+                  </PaginationItem>
+                }
               </PaginationContent>
             </Pagination>
           )}
