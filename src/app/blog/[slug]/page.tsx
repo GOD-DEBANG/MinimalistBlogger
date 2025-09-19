@@ -46,7 +46,7 @@ export default async function PostPage({ params }: { params: { slug:string } }) 
           <div className="flex items-center space-x-2">
             <Avatar className="h-8 w-8">
               <AvatarImage src={post.author.avatarUrl} alt={post.author.name} />
-              <AvatarFallback>{post.author.name.charAt(0)}</Fallback>
+              <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <span>{post.author.name}</span>
           </div>
