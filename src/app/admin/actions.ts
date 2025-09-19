@@ -1,7 +1,7 @@
 "use server";
 
 import { generateBlogPost } from "@/ai/flows";
-import { run } from "@genkit-ai/next/server";
+import { run } from "genkit";
 
 export async function generateBlogPostAction(topic: string) {
   if (!topic) {
