@@ -1,3 +1,64 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "post-1",
+      "description": "An abstract geometric pattern in shades of blue and gray, representing technology and data.",
+      "imageUrl": "https://picsum.photos/seed/tech-abstract/1200/800",
+      "imageHint": "technology abstract"
+    },
+    {
+      "id": "post-2",
+      "description": "A clean, modern workspace with a laptop, notebook, and a cup of coffee.",
+      "imageUrl": "https://picsum.photos/seed/modern-workspace/1200/800",
+      "imageHint": "modern workspace"
+    },
+    {
+      "id": "post-3",
+      "description": "A serene mountain landscape at sunrise, evoking a sense of calm and mindfulness.",
+      "imageUrl": "https://picsum.photos/seed/mindful-sunrise/1200/800",
+      "imageHint": "mindful sunrise"
+    },
+    {
+      "id": "post-4",
+      "description": "A person's hands typing on a glowing keyboard in a dark room.",
+      "imageUrl": "https://picsum.photos/seed/coding-keyboard/1200/800",
+      "imageHint": "coding keyboard"
+    },
+    {
+      "id": "post-5",
+      "description": "Colorful sticky notes on a whiteboard, representing brainstorming and productivity.",
+      "imageUrl": "https://picsum.photos/seed/productivity-board/1200/800",
+      "imageHint": "productivity board"
+    },
+    {
+      "id": "post-6",
+      "description": "A person reading a book in a cozy, well-lit library.",
+      "imageUrl": "https://picsum.photos/seed/reading-library/1200/800",
+      "imageHint": "reading library"
+    },
+    {
+      "id": "post-7",
+      "description": "A close-up of a complex and clean user interface design on a screen.",
+      "imageUrl": "https://picsum.photos/seed/ui-design/1200/800",
+      "imageHint": "ui design"
+    },
+    {
+      "id": "post-8",
+      "description": "A winding road through a forest, symbolizing a journey.",
+      "imageUrl": "https://picsum.photos/seed/journey-road/1200/800",
+      "imageHint": "journey road"
+    },
+    {
+      "id": "post-9",
+      "description": "A group of diverse people collaborating around a table.",
+      "imageUrl": "https://picsum.photos/seed/team-collaboration/1200/800",
+      "imageHint": "team collaboration"
+    },
+    {
+      "id": "post-10",
+      "description": "A minimalist architectural detail with strong lines and shadows.",
+      "imageUrl": "https://picsum.photos/seed/minimal-architecture/1200/800",
+      "imageHint": "minimal architecture"
+    }
+  ]
 }
