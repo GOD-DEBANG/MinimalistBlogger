@@ -7,9 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { type Post } from "@/lib/posts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { generateBlogPostAction } from "../actions";
+import { generateBlogPostAction } from "./actions";
 import { useState, useTransition } from "react";
 import { Sparkles, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -25,20 +24,13 @@ const formSchema = z.object({
 
 type PostFormValues = z.infer<typeof formSchema>;
 
-interface PostFormProps {
-  post?: Post;
-}
-
-export default function PostForm({ post }: PostFormProps) {
+export default function PostForm() {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const [topic, setTopic] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const defaultValues = post ? {
-    ...post,
-    tags: post.tags.join(', '),
-  } : {
+  const defaultValues = {
     title: "",
     excerpt: "",
     content: "",
@@ -178,7 +170,7 @@ export default function PostForm({ post }: PostFormProps) {
               </CardContent>
             </Card>
             <Button type="submit" disabled={isPending}>
-              {post ? 'Update Post' : 'Create Post'}
+              Create Post
             </Button>
           </form>
         </Form>
