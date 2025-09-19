@@ -1,8 +1,7 @@
 import { ai } from '../genkit';
 import { z } from 'zod';
-import { defineFlow } from 'genkit';
 
-export const generateBlogPost = defineFlow(
+export const generateBlogPost = ai.defineFlow(
   {
     name: 'generateBlogPost',
     inputSchema: z.object({ topic: z.string() }),
@@ -14,6 +13,6 @@ export const generateBlogPost = defineFlow(
       model: 'googleai/gemini-2.5-flash',
     });
 
-    return llmResponse.text();
+    return llmResponse.text;
   }
 );
