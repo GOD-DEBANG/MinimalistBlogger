@@ -1,7 +1,7 @@
 "use server";
 
 import { generateBlogPost } from "@/ai/flows";
-import { run } from "genkit";
+import { ai } from "@/ai/genkit";
 
 export async function generateBlogPostAction(topic: string) {
   if (!topic) {
@@ -9,7 +9,7 @@ export async function generateBlogPostAction(topic: string) {
   }
   
   try {
-    const result = await run(generateBlogPost, { topic });
+    const result = await generateBlogPost({ topic });
     return result;
   } catch (error) {
     console.error("Error generating blog post:", error);

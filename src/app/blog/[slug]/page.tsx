@@ -25,7 +25,8 @@ const Markdown = ({ content }: { content: string }) => {
   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 };
 
-export default async function PostPage({ params }: { params: { slug:string } }) {
+export default async function PostPage(props: { params: Promise<{ slug:string }> }) {
+  const params = await props.params;
   const post = await getPostBySlug(params.slug);
 
   if (!post) {

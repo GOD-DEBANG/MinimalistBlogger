@@ -10,7 +10,8 @@ import { format } from 'date-fns';
 
 const POSTS_PER_PAGE = 6;
 
-export default async function BlogPage({ searchParams }: { searchParams?: { category?: string; tag?: string; page?: string; q?: string; } }) {
+export default async function BlogPage(props: { searchParams?: Promise<{ category?: string; tag?: string; page?: string; q?: string; }> }) {
+  const searchParams = await props.searchParams;
   const allPosts = await getPosts(searchParams?.q);
   const categories = getCategories();
   const tags = getTags();
