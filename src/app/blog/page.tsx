@@ -9,8 +9,8 @@ import { format } from 'date-fns';
 
 const POSTS_PER_PAGE = 6;
 
-export default function BlogPage({ searchParams }: { searchParams?: { category?: string; tag?: string; page?: string; q?: string; } }) {
-  const allPosts = getPosts(searchParams?.q);
+export default async function BlogPage({ searchParams }: { searchParams?: { category?: string; tag?: string; page?: string; q?: string; } }) {
+  const allPosts = await getPosts(searchParams?.q);
   const categories = getCategories();
   const tags = getTags();
 
@@ -36,7 +36,7 @@ export default function BlogPage({ searchParams }: { searchParams?: { category?:
   );
   
   const createQueryString = (name: string, value: string) => {
-    const params = new URLSearchParams(searchParams?.toString());
+    const params = new URLSearchParams(searchParams as any);
     if (params.get(name) === value) {
       params.delete(name);
     } else {
@@ -47,7 +47,7 @@ export default function BlogPage({ searchParams }: { searchParams?: { category?:
   };
   
   const createPaginationString = (page: number) => {
-    const params = new URLSearchParams(searchParams?.toString());
+    const params = new URLSearchParams(searchParams as any);
     params.set('page', page.toString());
     return params.toString();
   }

@@ -16,7 +16,7 @@ export default function Home() {
     'use server';
     const q = formData.get('q');
     if (typeof q === 'string' && q) {
-      redirect(`/blog/search?q=${q}`);
+      redirect(`/blog?q=${q}`);
     }
   }
 

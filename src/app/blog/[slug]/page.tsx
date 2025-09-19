@@ -3,13 +3,14 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Calendar, User } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { format } from 'date-fns';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 
 // A simple markdown to HTML converter
 const Markdown = ({ content }: { content: string }) => {
+  if (!content) return null;
   const htmlContent = content
     .split('\n')
     .map(line => {
@@ -24,14 +25,15 @@ const Markdown = ({ content }: { content: string }) => {
   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 };
 
-export default function PostPage({ params }: { params: { slug:string } }) {
-  const post = getPostBySlug(params.slug);
+export default async function PostPage({ params }: { params: { slug:string } }) {
+  const post = await getPostBySlug(params.slug);
 
   if (!post) {
     notFound();
   }
   
-  const relatedPosts = getPosts()
+  const allPosts = await getPosts();
+  const relatedPosts = allPosts
     .filter(p => p.category === post.category && p.id !== post.id)
     .slice(0, 3);
 
@@ -44,7 +46,7 @@ export default function PostPage({ params }: { params: { slug:string } }) {
           <div className="flex items-center space-x-2">
             <Avatar className="h-8 w-8">
               <AvatarImage src={post.author.avatarUrl} alt={post.author.name} />
-              <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{post.author.name.charAt(0)}</Fallback>
             </Avatar>
             <span>{post.author.name}</span>
           </div>
@@ -88,7 +90,7 @@ export default function PostPage({ params }: { params: { slug:string } }) {
                    <Image src={relatedPost.imageUrl} alt={relatedPost.title} width={300} height={200} className="w-full h-32 object-cover rounded-t-lg" data-ai-hint={relatedPost.imageHint} />
                 </Link>
                 <CardHeader>
-                  <CardTitle className="text-md">
+                  <CardTitle className="text-lg">
                     <Link href={`/blog/${relatedPost.slug}`}>{relatedPost.title}</Link>
                   </CardTitle>
                 </CardHeader>

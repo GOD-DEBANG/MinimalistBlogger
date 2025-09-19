@@ -26,7 +26,7 @@ const getImage = (id: string) => {
   };
 };
 
-const posts: Post[] = [
+const localPosts: Post[] = [
   {
     id: '1',
     slug: 'the-art-of-state-management-in-react',
@@ -207,11 +207,65 @@ Step away from your computer to stretch, walk, or do something non-screen relate
   },
 ];
 
-export const getPosts = (query?: string): Post[] => {
-  let filteredPosts = posts;
+async function getDynamicPosts(query?: string): Promise<Post[]> {
+  if (!query) {
+    return [];
+  }
+
+  const API_KEY = process.env.API_KEY;
+  if (!API_KEY) {
+    console.warn("API_KEY is not set. Skipping dynamic post fetching.");
+    return [];
+  }
+
+  const url = `https://www.googleapis.com/blogger/v3/blogs/3213900/posts/search?q=${query}&key=${API_KEY}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error('Failed to fetch dynamic posts:', response.statusText);
+      return [];
+    }
+    const data = await response.json();
+
+    if (!data.items) {
+      return [];
+    }
+    
+    return data.items.map((item: any, index: number) => {
+        const slug = item.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+        return {
+            id: `dyn-${item.id || index}`,
+            slug: slug,
+            title: item.title,
+            excerpt: item.content.substring(0, 150).replace(/<[^>]*>?/gm, ''),
+            content: item.content.replace(/<[^>]*>?/gm, '\n'),
+            ...getImage(`post-${(index % 10) + 1}`),
+            date: item.published,
+            author: {
+                name: item.author.displayName,
+                avatarUrl: `https://i.pravatar.cc/150?u=${item.author.id}`,
+            },
+            category: 'Dynamic',
+            tags: item.labels || [],
+            featured: false,
+        }
+    });
+  } catch (error) {
+    console.error("Error fetching dynamic posts:", error);
+    return [];
+  }
+}
+
+export const getPosts = async (query?: string): Promise<Post[]> => {
+  let posts: Post[] = [...localPosts];
+  
+  const dynamicPosts = await getDynamicPosts(query);
+  posts.push(...dynamicPosts);
+
   if (query) {
     const lowerCaseQuery = query.toLowerCase();
-    filteredPosts = posts.filter(post => 
+    posts = posts.filter(post => 
       post.title.toLowerCase().includes(lowerCaseQuery) ||
       post.content.toLowerCase().includes(lowerCaseQuery) ||
       post.excerpt.toLowerCase().includes(lowerCaseQuery) ||
@@ -219,23 +273,33 @@ export const getPosts = (query?: string): Post[] => {
       post.tags.some(tag => tag.toLowerCase().includes(lowerCaseQuery))
     );
   }
-  return filteredPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  
+  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
 export const getFeaturedPosts = (): Post[] => {
-  return posts.filter(p => p.featured).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return localPosts.filter(p => p.featured).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
-export const getPostBySlug = (slug: string): Post | undefined => {
-  return posts.find(p => p.slug === slug);
+export const getPostBySlug = async (slug: string): Promise<Post | undefined> => {
+  let allPosts = await getPosts();
+  const post = allPosts.find(p => p.slug === slug);
+
+  if(post) {
+      return post;
+  }
+
+  // Fallback for dynamic posts that may not be in the initial list if no query was provided
+  allPosts = await getPosts(slug.replace(/-/g, ' '));
+  return allPosts.find(p => p.slug === slug);
 };
 
 export const getCategories = (): string[] => {
-    const categories = new Set(posts.map(p => p.category));
+    const categories = new Set(localPosts.map(p => p.category));
     return Array.from(categories);
 }
 
 export const getTags = (): string[] => {
-    const tags = new Set(posts.flatMap(p => p.tags));
+    const tags = new Set(localPosts.flatMap(p => p.tags));
     return Array.from(tags);
 }
