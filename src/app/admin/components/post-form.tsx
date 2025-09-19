@@ -13,6 +13,7 @@ import { generateBlogPostAction } from "../actions";
 import { useState, useTransition } from "react";
 import { Sparkles, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
